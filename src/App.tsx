@@ -1,14 +1,19 @@
-import { useState } from 'react'
-
-import './App.css'
+import { useState, useEffect } from 'react'
+import { getUsers } from './services/api';
 
 function App() {
 
-  return (
-    <h1>
-      Olá Mundo!
-    </h1>
-  )
-}
+  useEffect(() => {
+    getUsers().then((data) => console.log("dados recebidos:", data));
+  }, []);
 
-export default App
+  return (
+   <div className="p-4">
+      <h1 className="text-2xl font-bold text-blue-600">
+        Teste de API (Olhe o Console)
+      </h1>
+    </div>
+  );
+};
+
+export default App;
