@@ -8,12 +8,16 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const [searchTerm, setSearchTerm] = useState('')
+
   useEffect(() => {
     getUsers()
       .then((data) => setUsers(data))
       .catch((error) => setError('Erro ao carregar usuários. Verifique sua conexão.'))
       .finally(() => setLoading(false));
   }, []);
+
+  const filteredUsers = users.filter(({name}) => name.toLowerCase().includes(searchTerm.toLowerCase()) )
 
   const handleUserClick = (user: User) => {
     console.log("clicou no usuário", user.name);
@@ -25,6 +29,16 @@ function App() {
         <h1 className='text-3xl font-bold text-gray-800 mb-8 text-center'>
           Dashboard de Usuários
         </h1>
+          <div className='mb-8 max-w-md mx-auto'>
+            <input
+              type="text"
+              placeholder='Buscar por nome...'
+              value={searchTerm}
+              onChange={({target}) => setSearchTerm(target.value)}
+              className='w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all'           
+            />
+          </div>
+
           {loading && (
             <div className='text-center py-10'>
               <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto'></div>
@@ -40,9 +54,15 @@ function App() {
 
           {!loading && !error && (
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-              { users.map((user) => (
+              { filteredUsers.length > 0 ? (
+              filteredUsers.map((user) => (
                 <UserCard key={user.id} user={user} onClick={handleUserClick} />
-              ))}
+              ))) : (
+                <p className='col-span-full text-center text-gray-500 text-lg'>
+                  Nenhum usuário encontrado com esse nome.
+                </p>
+              )
+            }
             </div>
           )}
       </div>
