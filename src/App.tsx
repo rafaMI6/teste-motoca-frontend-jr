@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { UserCard } from './components/UserCard';
+import { UserModal } from './components/UserModal';
 import { getUsers } from './services/api';
 import type { User } from './types/User';
 
@@ -7,21 +8,17 @@ function App() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
 
   useEffect(() => {
     getUsers()
       .then((data) => setUsers(data))
-      .catch((error) => setError('Erro ao carregar usuários. Verifique sua conexão.'))
+      .catch(() => setError('Erro ao carregar usuários. Verifique sua conexão.'))
       .finally(() => setLoading(false));
   }, []);
 
   const filteredUsers = users.filter(({name}) => name.toLowerCase().includes(searchTerm.toLowerCase()) )
-
-  const handleUserClick = (user: User) => {
-    console.log("clicou no usuário", user.name);
-  };
 
   return (
    <div className='min-h-screen bg-gray-50 p-8 font-sans'>
@@ -54,17 +51,19 @@ function App() {
 
           {!loading && !error && (
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-              { filteredUsers.length > 0 ? (
-              filteredUsers.map((user) => (
-                <UserCard key={user.id} user={user} onClick={handleUserClick} />
-              ))) : (
-                <p className='col-span-full text-center text-gray-500 text-lg'>
-                  Nenhum usuário encontrado com esse nome.
-                </p>
-              )
-            }
+              {filteredUsers.map((user) => (
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  onClick={(user) => setSelectedUser(user)}
+                />
+              ))}
             </div>
           )}
+          <UserModal
+            user={selectedUser}
+            onClose={() => setSelectedUser(null)}
+          />
       </div>
     </div>
   )
