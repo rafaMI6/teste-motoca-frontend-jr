@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { UserCard } from './components/UserCard';
 import { UserModal } from './components/UserModal';
 import { getUsers } from './services/api';
+import { useDebounce } from './hooks/useDebounce';
 import type { User } from './types/User';
 
 function App() {
@@ -18,7 +19,10 @@ function App() {
       .finally(() => setLoading(false));
   }, []);
 
-  const filteredUsers = users.filter(({name}) => name.toLowerCase().includes(searchTerm.toLowerCase()) )
+  //espera terminar de digitar
+  const debounceSearch = useDebounce(searchTerm, 500);
+
+  const filteredUsers = users.filter(({name}) => name.toLowerCase().includes(debounceSearch.toLowerCase()) )
 
   return (
    <div className='min-h-screen bg-gray-50 p-8 font-sans'>
