@@ -1,4 +1,4 @@
-# 🚀 Dashboard de Usuários - Teste Desenvolvedor Júnior
+# 🚀 Dashboard de Usuários - Teste Front-end Júnior
 
 Este projeto é uma aplicação web desenvolvida como parte do teste técnico para a vaga de Desenvolvedor Júnior. A aplicação consome uma API pública para exibir uma lista de usuários, permitindo filtragem e visualização detalhada de informações e postagens recentes.
 
